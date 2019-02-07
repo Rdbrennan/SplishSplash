@@ -12,6 +12,8 @@
 		6884CE65220AA7DD0055F225 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6884CE63220AA7DD0055F225 /* Main.storyboard */; };
 		6884CE67220AA7E00055F225 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6884CE66220AA7E00055F225 /* Assets.xcassets */; };
 		6884CE6A220AA7E00055F225 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6884CE68220AA7E00055F225 /* LaunchScreen.storyboard */; };
+		6884CE74220CBA680055F225 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6884CE73220CBA680055F225 /* Model.swift */; };
+		6884CE78220CBC070055F225 /* RandomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6884CE77220CBC070055F225 /* RandomColor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		6884CE66220AA7E00055F225 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6884CE69220AA7E00055F225 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6884CE6B220AA7E00055F225 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6884CE73220CBA680055F225 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		6884CE77220CBC070055F225 /* RandomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomColor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +58,56 @@
 		6884CE5E220AA7DD0055F225 /* SplishSplash */ = {
 			isa = PBXGroup;
 			children = (
-				6884CE5F220AA7DD0055F225 /* AppDelegate.swift */,
-				6884CE61220AA7DD0055F225 /* ViewController.swift */,
-				6884CE63220AA7DD0055F225 /* Main.storyboard */,
-				6884CE66220AA7E00055F225 /* Assets.xcassets */,
-				6884CE68220AA7E00055F225 /* LaunchScreen.storyboard */,
+				6884CE79220CC8920055F225 /* Model */,
+				6884CE75220CBBC30055F225 /* View */,
+				68F4841A220CDC12000BC2C7 /* Controller */,
+				6884CE76220CBBE20055F225 /* Extensions */,
+				6884CE7B220CC8C80055F225 /* Resources */,
 				6884CE6B220AA7E00055F225 /* Info.plist */,
 			);
 			path = SplishSplash;
+			sourceTree = "<group>";
+		};
+		6884CE75220CBBC30055F225 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6884CE63220AA7DD0055F225 /* Main.storyboard */,
+				6884CE68220AA7E00055F225 /* LaunchScreen.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		6884CE76220CBBE20055F225 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6884CE77220CBC070055F225 /* RandomColor.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		6884CE79220CC8920055F225 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				6884CE73220CBA680055F225 /* Model.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		6884CE7B220CC8C80055F225 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6884CE5F220AA7DD0055F225 /* AppDelegate.swift */,
+				6884CE66220AA7E00055F225 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		68F4841A220CDC12000BC2C7 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				6884CE61220AA7DD0055F225 /* ViewController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,6 +181,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6884CE78220CBC070055F225 /* RandomColor.swift in Sources */,
+				6884CE74220CBA680055F225 /* Model.swift in Sources */,
 				6884CE62220AA7DD0055F225 /* ViewController.swift in Sources */,
 				6884CE60220AA7DD0055F225 /* AppDelegate.swift in Sources */,
 			);
