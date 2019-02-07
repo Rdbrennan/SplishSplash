@@ -15,6 +15,10 @@ class ViewController: UIViewController {
     var yCooridinate = CGFloat()
     var touchPoint = CGPoint()
     var finalRadius = CGFloat()
+    let scaleX = CABasicAnimation(keyPath: "transform.scale")
+    let fade = CABasicAnimation(keyPath: "opacity")
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -27,7 +31,6 @@ class ViewController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
         let location = touch.location(in: self.view)
-        print(location)
         touchPoint = location
     }
     
@@ -46,63 +49,51 @@ class ViewController: UIViewController {
         shapeLayer.bounds = circlePath.bounds
         shapeLayer.fillColor = splishColor.cgColor
         shapeLayer.opacity = 0.8
-        shapeLayer.frame.origin = CGPoint(x: touchPoint.x, y: touchPoint.y)
+        shapeLayer.frame.origin = CGPoint(x: touchPoint.x - finalRadius, y: touchPoint.y - finalRadius)
         
         //Animate Circle
-        //It takes 0.2s to appear fully. After it appears, it stays on screen for 1.5s, then it fades out over 0.5s.
-        //Grow from 0 to (60-150) in 1.5s
-        
-        //Completion block:
-        //Call Splash() and fade out over 0.5s
-        
         view.layer.addSublayer(shapeLayer)
-        
-        //Fade Animation
-        let fade = CABasicAnimation()
-        fade.keyPath = "opacity"
-        fade.byValue = -1
-        fade.duration = 0.5
-        fade.isRemovedOnCompletion = true
-        fade.fillMode = .removed
-        
+
         //Scale Animation
-         let scaleX = CABasicAnimation(keyPath: "transform.scale")
         scaleX.fromValue = 0
         scaleX.toValue = 1
         scaleX.duration = 0.2
         scaleX.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
         scaleX.fillMode = CAMediaTimingFillMode.forwards
-        scaleX.isRemovedOnCompletion = false
+        scaleX.isRemovedOnCompletion = true
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
         self.createSplash()
         }
         
-        
- 
-        
-        
-        print(finalRadius)
-        //Remove Splish Circle
-        shapeLayer.add(scaleX, forKey: "transform.scale")
-        
+        //Fade Animation
+        fade.keyPath = "opacity"
+        fade.byValue = -1
+        fade.duration = 0.5
+        fade.isRemovedOnCompletion = true
+        fade.fillMode = CAMediaTimingFillMode.forwards
 
+        print(finalRadius)
+        
+        shapeLayer.add(scaleX, forKey: "transform.scale")
+
+        //Remove Splish Circle
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.7) {
             CATransaction.begin()
             CATransaction.setCompletionBlock({
-                print("removed")
+                shapeLayer.isHidden = true
                 shapeLayer.removeFromSuperlayer()
             })
-            shapeLayer.add(fade, forKey: "fade")
+            shapeLayer.add(self.fade, forKey: "opacity")
             
             CATransaction.commit()
         }
 
-
     }
     @objc func createSplash(){
+        let smallerRadius = CGFloat.random(in: 0.2 ... 0.4)
         let numofCircles = CGFloat.random(in: 2 ... 6)
         let num = Int(numofCircles)
-        let smallerRadius = CGFloat.random(in: 0.2 ... 0.4)
         
         print("-----------------------------")
         print("Set:")
@@ -132,14 +123,32 @@ class ViewController: UIViewController {
                 print("nil")
             }
             let circlePath = UIBezierPath(arcCenter: CGPoint(x: touchPoint.x + CenterOffsetX,y: touchPoint.y + CenterOffsetY), radius: finalRadius - (finalRadius * smallerRadius), startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
+            
             let shapeLayer = CAShapeLayer()
             shapeLayer.path = circlePath.cgPath
+            shapeLayer.bounds = circlePath.bounds
             shapeLayer.fillColor = splishColor.cgColor
+            shapeLayer.opacity = 0.8
+            shapeLayer.frame.origin = CGPoint(x: (touchPoint.x - finalRadius) + CenterOffsetX, y: (touchPoint.y - finalRadius) + CenterOffsetY)
             print(CenterOffsetX)
             print(CenterOffsetY)
 
             view.layer.addSublayer(shapeLayer)
+            
+            
+            shapeLayer.add(scaleX, forKey: "transform.scale")
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.7) {
+                CATransaction.begin()
+                CATransaction.setCompletionBlock({
+                    shapeLayer.isHidden = true
+                    shapeLayer.removeFromSuperlayer()
+                })
+                shapeLayer.add(self.fade, forKey: "fade")
+                CATransaction.commit()
+            }
         }
+        
         print("Number printed is: ", num)
         print("-----------------------------")
     }
