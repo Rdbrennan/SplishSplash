@@ -7,79 +7,83 @@
 //
 
 import UIKit
+import Foundation
 
 class ViewController: UIViewController {
-
+    
     //Variables Model
     let model = SplishSplashModel.self
-
+    var multipleTouch = Int()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        //Interaction Listener
-        let tapGestRecognizer = UITapGestureRecognizer(target: self, action: #selector(createSplish))
-        view.addGestureRecognizer(tapGestRecognizer)
     }
     
     //Save Tap Location
+    ///Initiate Splish Circle
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let touch = touches.first!
-        let location = touch.location(in: self.view)
-        model.touchPoint = location
+        for touch in touches {
+            let location = touch.location(in: self.view)
+            model.touchPoint = location
+            print(location)
+            model.splishColor = UIColor.random()
+            model.splashColor = model.splishColor
+            model.finalRadius = CGFloat.random(in: 60 ..< 150)
+            
+            let circlePath = UIBezierPath(arcCenter: CGPoint(x:model.touchPoint.x,y: model.touchPoint.y), radius: model.finalRadius, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
+            
+            let shapeLayer = CAShapeLayer()
+            shapeLayer.path = circlePath.cgPath
+            shapeLayer.bounds = circlePath.bounds
+            shapeLayer.fillColor = model.splishColor.cgColor
+            shapeLayer.opacity = 0.8
+            shapeLayer.fillMode = CAMediaTimingFillMode.forwards
+            shapeLayer.frame.origin = CGPoint(x: model.touchPoint.x - model.finalRadius, y: model.touchPoint.y - model.finalRadius)
+            
+            view.layer.addSublayer(shapeLayer)
+            
+            //Scale Animation
+            model.scale.fromValue = 0
+            model.scale.toValue = 1
+            model.scale.duration = 0.2
+            model.scale.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
+            model.scale.fillMode = CAMediaTimingFillMode.forwards
+            model.scale.isRemovedOnCompletion = false
+            model.fade.fillMode = CAMediaTimingFillMode.both
+            
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                self.createSplash()
+            }
+            
+            //Fade Animation
+            model.fade.keyPath = "opacity"
+            model.fade.byValue = -1
+            model.fade.duration = 0.5
+            model.fade.isRemovedOnCompletion = false
+            model.fade.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
+            model.fade.fillMode = CAMediaTimingFillMode.forwards
+            model.fade.fillMode = CAMediaTimingFillMode.both
+            
+            //Scale Animation
+            shapeLayer.add(model.scale, forKey: "transform.scale")
+            
+            //Fade Animation
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.7) {
+                CATransaction.begin()
+                CATransaction.setCompletionBlock({
+                    //Remove Splish Circle from View
+                    shapeLayer.isHidden = true
+                    shapeLayer.opacity = 0
+                    shapeLayer.removeFromSuperlayer()
+                })
+                shapeLayer.add(self.model.fade, forKey: "opacity")
+                CATransaction.commit()
+            }
+        }
     }
     
     ///MARK: FUNCTIONS
-    
-    //Initiate Splish Circle
-    @objc func createSplish(){
-        model.splishColor = UIColor.random()
-        model.splashColor = model.splishColor
-        model.finalRadius = CGFloat.random(in: 60 ..< 150)
-
-        let circlePath = UIBezierPath(arcCenter: CGPoint(x:model.touchPoint.x,y: model.touchPoint.y), radius: model.finalRadius, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
-
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.path = circlePath.cgPath
-        shapeLayer.bounds = circlePath.bounds
-        shapeLayer.fillColor = model.splishColor.cgColor
-        shapeLayer.opacity = 0.8
-        shapeLayer.frame.origin = CGPoint(x: model.touchPoint.x - model.finalRadius, y: model.touchPoint.y - model.finalRadius)
-        
-        view.layer.addSublayer(shapeLayer)
-
-        //Scale Animation
-        model.scale.fromValue = 0
-        model.scale.toValue = 1
-        model.scale.duration = 0.2
-        model.scale.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
-        model.scale.fillMode = CAMediaTimingFillMode.forwards
-        model.scale.isRemovedOnCompletion = true
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-        self.createSplash()
-        }
-        
-        //Fade Animation
-        model.fade.keyPath = "opacity"
-        model.fade.byValue = -1
-        model.fade.duration = 0.5
-        model.fade.isRemovedOnCompletion = true
-        model.fade.fillMode = CAMediaTimingFillMode.forwards
-        
-        //Scale Animation
-        shapeLayer.add(model.scale, forKey: "transform.scale")
-
-        //Fade Animation
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.7) {
-            CATransaction.begin()
-            CATransaction.setCompletionBlock({
-                //Remove Splish Circle from View
-                shapeLayer.isHidden = true
-                shapeLayer.removeFromSuperlayer()
-            })
-            shapeLayer.add(self.model.fade, forKey: "opacity")
-            CATransaction.commit()
-        }
-    }
     
     //Initiate Splash Circle
     @objc func createSplash(){
@@ -89,10 +93,10 @@ class ViewController: UIViewController {
         
         //Loop and randomize # of circles & position of circles
         print("-----------------------------")
-        for _ in 0...num{
+        for _ in 1...num{
             var CenterOffsetX = CGFloat()
             var CenterOffsetY = CGFloat()
-
+            
             let random = Int.random(in: 1 ... 4)
             switch (random) {
             case 1:
@@ -122,7 +126,7 @@ class ViewController: UIViewController {
             shapeLayer.fillColor = model.splishColor.cgColor
             shapeLayer.opacity = 0.8
             shapeLayer.frame.origin = CGPoint(x: (model.touchPoint.x - model.finalRadius) + CenterOffsetX, y: (model.touchPoint.y - model.finalRadius) + CenterOffsetY)
-
+            
             view.layer.addSublayer(shapeLayer)
             
             //Scale Animation
@@ -132,8 +136,9 @@ class ViewController: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.7) {
                 CATransaction.begin()
                 CATransaction.setCompletionBlock({
-                    //Remove Splish Circle from View
+                    //Remove Splash Circle from View
                     shapeLayer.isHidden = true
+                    shapeLayer.opacity = 0
                     shapeLayer.removeFromSuperlayer()
                 })
                 shapeLayer.add(self.model.fade, forKey: "fade")
